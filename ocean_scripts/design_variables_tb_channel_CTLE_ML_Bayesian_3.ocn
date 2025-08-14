@@ -1,0 +1,16 @@
+desVar(	  "wireopt" 19	)
+desVar(	  "bitperiod" "1/56G"	) ; Signal input frequency
+desVar(	  "V_one" 0.9	)
+desVar(	  "V_zero" 0.5	)
+desVar(	  "Vin_AC" 1	)
+desVar(	  "Vin_DC" 0.7	)
+desVar(	  "L" 20n	)
+desVar(	  "Rsource" 0	)
+desVar(	  "Rload" 50	)
+; Actual varying parameters
+desVar(	  "fW" "10u"	) 
+desVar(	  "current" "500u"	)
+desVar(	  "ind" "0"	)
+desVar(	  "Rd" "1.42015k"	)
+desVar(	  "Cs" "1f"	)
+desVar(	  "Rs" "10"	)

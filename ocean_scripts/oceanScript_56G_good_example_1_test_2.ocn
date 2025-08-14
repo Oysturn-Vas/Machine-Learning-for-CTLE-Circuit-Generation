@@ -1,0 +1,310 @@
+envSetVal("maestro.explorer" "onHistoryNameCollision" 'cyclic "IncrementAsNew") 
+;====================Set to Maestro mode explorer =============================
+ocnSetXLMode("explorer")
+
+;ocnSetXLMode("assembler") ; Workaround to enable overwrite history file
+
+; Force ocean into interactive mode (to avoid warning message)
+envSetVal("spectre.envOpts" "controlMode" 'string "interactive")
+envSetVal("maestro.simulation" "interactiveA" 'boolean t)
+
+; Disable single point run optimization (causes oceans script to stuck when running the second time)
+envSetVal("adexl.distribute" "useSameProcess" 'boolean "nil")
+
+
+ocnxlProjectDir( "~/simulation" )
+ocnxlTargetCellView( "ECE740" "tb_channel_CTLE_ML_2" "maestro" )
+ocnxlResultsLocation( "" )
+ocnxlSimResultsLocation( "" )
+ocnxlMaxJobFail( 20 )
+
+; Allows overwriting history files (allows running the same script the second time) 
+;ocnxlHistoryPrefix("uncal")
+;ocnxlSetOverwriteHistory(t)
+;ocnxlSetOverwriteHistoryName("Next History Run")
+
+;====================== Tests setup ============================================
+
+;---------- Test "ECE740_tb_channel_CTLE_ML_2_1" ------------- 
+ocnxlBeginTest("ECE740_tb_channel_CTLE_ML_2_1")
+simulator( 'spectre )
+design( "ECE740" "tb_channel_CTLE_ML_2" "schematic")
+modelFile( 
+    '("$SPECTRE_MODEL_PATH/design_wrapper.lib.scs" "tt_pre")
+)
+analysis('ac ?start "0.1G"  ?stop "100G"  )
+analysis('dc ?saveOppoint t  )
+analysis('tran ?stop "20n"  )
+
+;desVar(	  "wireopt" 19	)
+;desVar(	  "bitperiod" "1/56G"	)
+;desVar(	  "V_one" 0.9	)
+;desVar(	  "V_zero" 0.5	)
+;desVar(	  "Vin_AC" 1	)
+;desVar(	  "Vin_DC" 0.7	)
+;desVar(	  "L" 20n	)
+;desVar(	  "Rsource" 0	)
+;desVar(	  "Rload" 50	)
+;desVar(	  "fW" 1.822u	)
+;desVar(	  "current" 1.14m	)
+;desVar(	  "ind" 2.85n	)
+;desVar(	  "Rd" 519	)
+;desVar(	  "Cs" 299.8f	)
+;desVar(	  "Rs" 364.6	)
+
+;load("~/workarea_GF22_FDX_EXT/ocean_scripts/design_variables_tb_channel_CTLE_ML_10000_samples_1.ocn")
+;load("~/workarea_GF22_FDX_EXT/ocean_scripts/design_variables_tb_channel_CTLE_ML_default.ocn")
+;load("~/workarea_GF22_FDX_EXT/ocean_scripts/design_variables_tb_channel_CTLE_ML_good_1.ocn")
+;load("~/workarea_GF22_FDX_EXT/ocean_scripts/design_variables_tb_channel_CTLE_ML_verify.ocn")
+load("~/workarea_GF22_FDX_EXT/ocean_scripts/design_variables_tb_channel_CTLE_ML_Bayesian_2.ocn")
+
+envOption(
+	'analysisOrder  list("pz" "dcmatch" "stb" "tran" "envlp" "ac" "dc" "lf" "noise" "xf" "sp" "pss" "pac" "pstb" "pnoise" "pxf" "psp" "qpss" "qpac" "qpnoise" "qpxf" "qpsp" "hb" "hbac" "hbstb" "hbnoise" "hbxf" "sens" "acmatch") 
+)
+option(	'pzSeverity  "None" 
+	'noiseSeverity  "None" 
+	'spSeverity  "None" 
+	'acSeverity  "None" 
+	'dcOpSeverity  "None" 
+	'dcSeverity  "None" 
+	'tranSeverity  "None" 
+)
+option( ?categ 'turboOpts
+	'numThreads  "8" 
+	'mtOption  "Manual" 
+)
+saveOption( ?infoOptions list(list("modelParameter" "models" "rawfile" "" "" "" t) list("element" "inst" "rawfile" "" "" "" t) list("outputParameter" "output" "rawfile" "" "" "" t) list("designParamVals" "parameters" "rawfile" "" "" "" t) list("primitives" "primitives" "rawfile" "" "" "" t) list("subckts" "subckts" "rawfile" "" "" "" t) list("asserts" "assert" "rawfile" "" "" "" nil) list("extremeinfo" "all" "logfile" "" "yes" "" nil) list("simStatistics" "simstat" "rawfile" "" "" "" nil) list("allcap" "allcap" "file" "" "" "" nil) list("<Click_To_Add>" "none" "rawfile" "" "" "" nil) ) )
+;save( 'v "/VDATA_p" "/VDATA_n" "/VACout_p_1" "/VACout_n_1" "/Vout_n_1" "/Vout_p_1" "/Vout_p_2" "/Vout_n_2" "/VACout_p_2" "/VACout_n_2" "/VACcon_p" "/VACcon_n" "/Vcon_p" "/Vcon_n" )
+temp( 27 ) 
+ocnxlOutputExpr( "value(dB20(VF(\"/VACcon_p\")) 1e+08 ?scale '(roundDown))" ?name "channel 0.1G attenuation" ?plot t ?evalType 'point)
+ocnxlOutputExpr( "value(dB20(VF(\"/VACout_p_1\")) 1e+08 ?scale '(roundDown))" ?name "stage 1 0.1G attenuation" ?plot t ?evalType 'point)
+ocnxlOutputExpr( "value(dB20(VF(\"/VACout_p_2\")) 1e+08 ?scale '(roundDown))" ?name "stage 2 0.1G attenuation" ?plot t ?evalType 'point)
+ocnxlOutputExpr( "value(dB20(VF(\"/VACcon_p\")) 3.5e+09 ?scale '(roundDown))" ?name "channel 3.5G attenuation" ?plot t ?evalType 'point)
+ocnxlOutputExpr( "value(dB20(VF(\"/VACout_p_1\")) 3.5e+09 ?scale '(roundDown))" ?name "stage 1 3.5G attenuation" ?plot t ?evalType 'point)
+ocnxlOutputExpr( "value(dB20(VF(\"/VACout_p_2\")) 3.5e+09 ?scale '(roundDown))" ?name "stage 2 3.5G attenuation" ?plot t ?evalType 'point)
+ocnxlOutputExpr( "value(dB20(VF(\"/VACcon_p\")) 7e+09 ?scale '(roundDown))" ?name "channel 7G attenuation" ?plot t ?evalType 'point)
+ocnxlOutputExpr( "value(dB20(VF(\"/VACout_p_1\")) 7e+09 ?scale '(roundDown))" ?name "stage 1 7G attenuation" ?plot t ?evalType 'point)
+ocnxlOutputExpr( "value(dB20(VF(\"/VACout_p_2\")) 7e+09 ?scale '(roundDown))" ?name "stage 2 7G attenuation" ?plot t ?evalType 'point)
+ocnxlOutputExpr( "value(dB20(VF(\"/VACcon_p\")) 1.4e+10 ?scale '(roundDown))" ?name "channel 14G attenuation" ?plot t ?evalType 'point)
+ocnxlOutputExpr( "value(dB20(VF(\"/VACout_p_1\")) 1.4e+10 ?scale '(roundDown))" ?name "stage 1 14G attenuation" ?plot t ?evalType 'point)
+ocnxlOutputExpr( "value(dB20(VF(\"/VACout_p_2\")) 1.4e+10 ?scale '(roundDown))" ?name "stage 2 14G attenuation" ?plot t ?evalType 'point)
+ocnxlOutputExpr( "value(dB20(VF(\"/VACcon_p\")) 2.8e+10 ?scale '(roundDown))" ?name "channel 28G attenuation" ?plot t ?evalType 'point)
+ocnxlOutputExpr( "value(dB20(VF(\"/VACout_p_1\")) 2.8e+10 ?scale '(roundDown))" ?name "stage 1 28G attenuation" ?plot t ?evalType 'point)
+ocnxlOutputExpr( "value(dB20(VF(\"/VACout_p_2\")) 2.8e+10 ?scale '(roundDown))" ?name "stage 2 28G attenuation" ?plot t ?evalType 'point)
+ocnxlOutputExpr( "((eyeMeasurement(eyeDiagram((v(\"/Vout_p_1\" ?result \"tran\") - v(\"/Vout_n_1\" ?result \"tran\")) 5e-09 2e-08 (2 * (1 / 5.6e+10)) ?triggerPeriod (1 / 5.6e+10) ?autoCenter t) 5e-09 2e-08 3.571429e-11 0.0 nil t 40.0 0.0 t 60.0 50.0 t 40.0 50.0 t 60.0 100.0 100.0 \"height\") * 100) / (2 * (VAR(\"V_one\") - VAR(\"V_zero\"))))" ?name "eye_height Vout_1 56G" ?plot t)
+ocnxlOutputExpr( "((eyeMeasurement(eyeDiagram((v(\"/Vout_p_1\" ?result \"tran\") - v(\"/Vout_n_1\" ?result \"tran\")) 5e-09 2e-08 (2 * (1 / 5.6e+10)) ?triggerPeriod (1 / 5.6e+10) ?autoCenter t) 5e-09 2e-08 3.571429e-11 0.0 nil t 40.0 0.0 t 60.0 50.0 t 40.0 50.0 t 60.0 100.0 100.0 \"maxHeight\") * 100) / (2 * (VAR(\"V_one\") - VAR(\"V_zero\"))))" ?name "eye_maxHeight Vout_1 56G" ?plot t)
+ocnxlOutputExpr( "((eyeHeightAtXY(eyeDiagram((v(\"/Vout_p_1\" ?result \"tran\") - v(\"/Vout_n_1\" ?result \"tran\")) 5e-09 2e-08 (2 * (1 / 5.6e+10)) ?triggerPeriod (1 / 5.6e+10) ?autoCenter t) 1.786e-11 0 ?output \"total\") * 100) / (2 * (VAR(\"V_one\") - VAR(\"V_zero\"))))" ?name "eye_height_XY Vout_1 56G" ?plot t ?evalType 'point)
+ocnxlOutputExpr( "((eyeMeasurement(eyeDiagram((v(\"/Vout_p_1\" ?result \"tran\") - v(\"/Vout_n_1\" ?result \"tran\")) 5e-09 2e-08 (2 * (1 / 5.6e+10)) ?triggerPeriod (1 / 5.6e+10) ?autoCenter t) 5e-09 2e-08 3.571429e-11 0.0 nil t 40.0 0.0 t 60.0 50.0 t 40.0 50.0 t 60.0 100.0 100.0 \"width\") * 100) / VAR(\"bitperiod\"))" ?name "eye_width Vout_1 56G" ?plot t)
+ocnxlOutputExpr( "((eyeMeasurement(eyeDiagram((v(\"/Vout_p_1\" ?result \"tran\") - v(\"/Vout_n_1\" ?result \"tran\")) 5e-09 2e-08 (2 * (1 / 5.6e+10)) ?triggerPeriod (1 / 5.6e+10) ?autoCenter t) 5e-09 2e-08 3.571429e-11 0.0 nil t 40.0 0.0 t 60.0 50.0 t 40.0 50.0 t 60.0 100.0 100.0 \"maxWidth\") * 100) / VAR(\"bitperiod\"))" ?name "eye_maxWidth Vout_1 56G" ?plot t)
+ocnxlOutputExpr( "((eyeWidthAtXY(eyeDiagram((v(\"/Vout_p_1\" ?result \"tran\") - v(\"/Vout_n_1\" ?result \"tran\")) 5e-09 2e-08 (2 * (1 / 5.6e+10)) ?triggerPeriod (1 / 5.6e+10) ?autoCenter t) 1.786e-11 0 ?output \"total\") * 100) / VAR(\"bitperiod\"))" ?name "eye_width_XY Vout_1 56G" ?plot t ?evalType 'point)
+ocnxlOutputExpr( "((eyeMeasurement(eyeDiagram((v(\"/Vout_p_2\" ?result \"tran\") - v(\"/Vout_n_2\" ?result \"tran\")) 5e-09 2e-08 (2 * (1 / 5.6e+10)) ?triggerPeriod (1 / 5.6e+10) ?autoCenter t) 5e-09 2e-08 3.571429e-11 0.0 nil t 40.0 0.0 t 60.0 50.0 t 40.0 50.0 t 60.0 100.0 100.0 \"height\") * 100) / (2 * (VAR(\"V_one\") - VAR(\"V_zero\"))))" ?name "eye_height Vout_2 56G" ?plot t)
+ocnxlOutputExpr( "((eyeMeasurement(eyeDiagram((v(\"/Vout_p_2\" ?result \"tran\") - v(\"/Vout_n_2\" ?result \"tran\")) 5e-09 2e-08 (2 * (1 / 5.6e+10)) ?triggerPeriod (1 / 5.6e+10) ?autoCenter t) 5e-09 2e-08 3.571429e-11 0.0 nil t 40.0 0.0 t 60.0 50.0 t 40.0 50.0 t 60.0 100.0 100.0 \"maxHeight\") * 100) / (2 * (VAR(\"V_one\") - VAR(\"V_zero\"))))" ?name "eye_maxHeight Vout_2 56G" ?plot t)
+ocnxlOutputExpr( "((eyeHeightAtXY(eyeDiagram((v(\"/Vout_p_2\" ?result \"tran\") - v(\"/Vout_n_2\" ?result \"tran\")) 5e-09 2e-08 (2 * (1 / 5.6e+10)) ?triggerPeriod (1 / 5.6e+10) ?autoCenter t) 1.786e-11 0 ?output \"total\") * 100) / (2 * (VAR(\"V_one\") - VAR(\"V_zero\"))))" ?name "eye_height_XY Vout_2 56G" ?plot t ?evalType 'point)
+ocnxlOutputExpr( "((eyeMeasurement(eyeDiagram((v(\"/Vout_p_2\" ?result \"tran\") - v(\"/Vout_n_2\" ?result \"tran\")) 5e-09 2e-08 (2 * (1 / 5.6e+10)) ?triggerPeriod (1 / 5.6e+10) ?autoCenter t) 5e-09 2e-08 3.571429e-11 0.0 nil t 40.0 0.0 t 60.0 50.0 t 40.0 50.0 t 60.0 100.0 100.0 \"width\") * 100) / VAR(\"bitperiod\"))" ?name "eye_width Vout_2 56G" ?plot t)
+ocnxlOutputExpr( "((eyeMeasurement(eyeDiagram((v(\"/Vout_p_2\" ?result \"tran\") - v(\"/Vout_n_2\" ?result \"tran\")) 5e-09 2e-08 (2 * (1 / 5.6e+10)) ?triggerPeriod (1 / 5.6e+10) ?autoCenter t) 5e-09 2e-08 3.571429e-11 0.0 nil t 40.0 0.0 t 60.0 50.0 t 40.0 50.0 t 60.0 100.0 100.0 \"maxWidth\") * 100) / VAR(\"bitperiod\"))" ?name "eye_maxWidth Vout_2 56G" ?plot t)
+ocnxlOutputExpr( "((eyeWidthAtXY(eyeDiagram((v(\"/Vout_p_2\" ?result \"tran\") - v(\"/Vout_n_2\" ?result \"tran\")) 5e-09 2e-08 (2 * (1 / 5.6e+10)) ?triggerPeriod (1 / 5.6e+10) ?autoCenter t) 1.786e-11 0 ?output \"total\") * 100) / VAR(\"bitperiod\"))" ?name "eye_width_XY Vout_2 56G" ?plot t ?evalType 'point)
+ocnxlOutputExpr( "((eyeMeasurement(eyeDiagram((v(\"/Vout_p_1\" ?result \"tran\") - v(\"/Vout_n_1\" ?result \"tran\")) 5e-09 8e-08 (2 * (1 / 1.4e+10)) ?triggerPeriod (1 / 1.4e+10) ?autoCenter t) 5e-09 8e-08 1.428571e-10 0.0 nil t 40.0 0.0 t 60.0 50.0 t 40.0 50.0 t 60.0 100.0 100.0 \"height\") * 100) / (2 * (VAR(\"V_one\") - VAR(\"V_zero\"))))" ?name "eye_height Vout_1 14G" ?evalType 'point)
+ocnxlOutputExpr( "((eyeMeasurement(eyeDiagram((v(\"/Vout_p_1\" ?result \"tran\") - v(\"/Vout_n_1\" ?result \"tran\")) 5e-09 8e-08 (2 * (1 / 1.4e+10)) ?triggerPeriod (1 / 1.4e+10) ?autoCenter t) 5e-09 8e-08 1.428571e-10 0.0 nil t 40.0 0.0 t 60.0 50.0 t 40.0 50.0 t 60.0 100.0 100.0 \"maxHeight\") * 100) / (2 * (VAR(\"V_one\") - VAR(\"V_zero\"))))" ?name "eye_maxHeight Vout_1 14G" ?evalType 'point)
+ocnxlOutputExpr( "((eyeMeasurement(eyeDiagram((v(\"/Vout_p_1\" ?result \"tran\") - v(\"/Vout_n_1\" ?result \"tran\")) 5e-09 8e-08 (2 * (1 / 1.4e+10)) ?triggerPeriod (1 / 1.4e+10) ?autoCenter t) 5e-09 8e-08 1.428571e-10 0.0 nil t 40.0 0.0 t 60.0 50.0 t 40.0 50.0 t 60.0 100.0 100.0 \"width\") * 100) / VAR(\"bitperiod\"))" ?name "eye_width Vout_1 14G" ?evalType 'point)
+ocnxlOutputExpr( "((eyeMeasurement(eyeDiagram((v(\"/Vout_p_1\" ?result \"tran\") - v(\"/Vout_n_1\" ?result \"tran\")) 5e-09 8e-08 (2 * (1 / 1.4e+10)) ?triggerPeriod (1 / 1.4e+10) ?autoCenter t) 5e-09 8e-08 1.428571e-10 0.0 nil t 40.0 0.0 t 60.0 50.0 t 40.0 50.0 t 60.0 100.0 100.0 \"maxWidth\") * 100) / VAR(\"bitperiod\"))" ?name "eye_maxWidth Vout_1 14G" ?evalType 'point)
+ocnxlOutputExpr( "((eyeMeasurement(eyeDiagram((v(\"/Vout_p_2\" ?result \"tran\") - v(\"/Vout_n_2\" ?result \"tran\")) 5e-09 8e-08 (2 * (1 / 1.4e+10)) ?triggerPeriod (1 / 1.4e+10) ?autoCenter t) 5e-09 8e-08 1.428571e-10 0.0 nil t 40.0 0.0 t 60.0 50.0 t 40.0 50.0 t 60.0 100.0 100.0 \"height\") * 100) / (2 * (VAR(\"V_one\") - VAR(\"V_zero\"))))" ?name "eye_height Vout_2 14G")
+ocnxlOutputExpr( "((eyeMeasurement(eyeDiagram((v(\"/Vout_p_2\" ?result \"tran\") - v(\"/Vout_n_2\" ?result \"tran\")) 5e-09 8e-08 (2 * (1 / 1.4e+10)) ?triggerPeriod (1 / 1.4e+10) ?autoCenter t) 5e-09 8e-08 1.428571e-10 0.0 nil t 40.0 0.0 t 60.0 50.0 t 40.0 50.0 t 60.0 100.0 100.0 \"maxHeight\") * 100) / (2 * (VAR(\"V_one\") - VAR(\"V_zero\"))))" ?name "eye_maxHeight Vout_2 14G")
+ocnxlOutputExpr( "((eyeMeasurement(eyeDiagram((v(\"/Vout_p_2\" ?result \"tran\") - v(\"/Vout_n_2\" ?result \"tran\")) 5e-09 8e-08 (2 * (1 / 1.4e+10)) ?triggerPeriod (1 / 1.4e+10) ?autoCenter t) 5e-09 8e-08 1.428571e-10 0.0 nil t 40.0 0.0 t 60.0 50.0 t 40.0 50.0 t 60.0 100.0 100.0 \"width\") * 100) / VAR(\"bitperiod\"))" ?name "eye_width Vout_2 14G")
+ocnxlOutputExpr( "((eyeMeasurement(eyeDiagram((v(\"/Vout_p_2\" ?result \"tran\") - v(\"/Vout_n_2\" ?result \"tran\")) 5e-09 8e-08 (2 * (1 / 1.4e+10)) ?triggerPeriod (1 / 1.4e+10) ?autoCenter t) 5e-09 8e-08 1.428571e-10 0.0 nil t 40.0 0.0 t 60.0 50.0 t 40.0 50.0 t 60.0 100.0 100.0 \"maxWidth\") * 100) / VAR(\"bitperiod\"))" ?name "eye_maxWidth Vout_2 14G")
+ocnxlOutputExpr( "v(\"/VDATA_p\" ?result \"tran\")" ?name "VT(\"/VDATA_p\")")
+;ocnxlOutputSignal( "/VDATA_p" ?save t)
+ocnxlOutputExpr( "v(\"/VDATA_n\" ?result \"tran\")" ?name "VT(\"/VDATA_n\")")
+;ocnxlOutputSignal( "/VDATA_n" ?save t)
+ocnxlOutputExpr( "dB20(VF(\"/VACcon_p\"))" ?name "dB20(VF(\"/VACcon_p_1\"))")
+ocnxlOutputExpr( "dB20(VF(\"/VACcon_n\"))" ?name "dB20(VF(\"/VACcon_n_1\"))")
+ocnxlOutputExpr( "v(\"/Vcon_p\" ?result \"tran\")" ?name "VT(\"/Vcon_p_1\")")
+ocnxlOutputExpr( "v(\"/Vcon_n\" ?result \"tran\")" ?name "VT(\"/Vcon_n_1\")")
+ocnxlOutputExpr( "v(\"/Vout_p_1\" ?result \"tran\")" ?name "VT(\"/Vout_p_1\")")
+ocnxlOutputExpr( "v(\"/Vout_n_1\" ?result \"tran\")" ?name "VT(\"/Vout_n_1\")")
+ocnxlOutputExpr( "v(\"/Vout_p_2\" ?result \"tran\")" ?name "VT(\"/Vout_p_2\")" ?evalType 'point)
+ocnxlOutputExpr( "v(\"/Vout_n_2\" ?result \"tran\")" ?name "VT(\"/Vout_n_2\")" ?evalType 'point)
+ocnxlOutputExpr( "dB20(VF(\"/VACout_p_1\"))" ?name "dB20(VF(\"/VACout_p_1\"))")
+ocnxlOutputExpr( "dB20(VF(\"/VACout_n_1\"))" ?name "dB20(VF(\"/VACout_n_1\"))")
+;ocnxlOutputSignal( "/VACout_p_1" ?save t)
+;ocnxlOutputSignal( "/VACout_n_1" ?save t)
+;ocnxlOutputSignal( "/Vout_n_1" ?save t)
+;ocnxlOutputSignal( "/Vout_p_1" ?save t)
+;ocnxlOutputSignal( "/Vout_p_2" ?save t)
+;ocnxlOutputSignal( "/Vout_n_2" ?save t)
+ocnxlOutputExpr( "dB20(VF(\"/VACout_p_2\"))" ?name "dB20(VF(\"/VACout_p_2\"))" ?evalType 'point)
+;ocnxlOutputSignal( "/VACout_p_2" ?save t)
+ocnxlOutputExpr( "dB20(VF(\"/VACout_n_2\"))" ?name "dB20(VF(\"/VACout_n_2\"))" ?evalType 'point)
+;ocnxlOutputSignal( "/VACout_n_2" ?save t)
+ocnxlOutputExpr( "(v(\"/Vout_p_1\" ?result \"tran\") - v(\"/Vout_n_1\" ?result \"tran\"))" ?name "VT(\"/Vout_1\")" ?evalType 'point)
+ocnxlOutputExpr( "(v(\"/Vout_p_2\" ?result \"tran\") - v(\"/Vout_n_2\" ?result \"tran\"))" ?name "VT(\"/Vout_2\")" ?evalType 'point)
+ocnxlOutputExpr( "eyeDiagram((v(\"/Vout_p_1\" ?result \"tran\") - v(\"/Vout_n_1\" ?result \"tran\")) 5e-09 8e-08 (2 * (1 / 1.4e+10)) ?triggerPeriod (1 / 1.4e+10) ?autoCenter t)" ?name "eye_VT(\"/Vout_1\") 14G")
+ocnxlOutputExpr( "eyeDiagram((v(\"/Vout_p_2\" ?result \"tran\") - v(\"/Vout_n_2\" ?result \"tran\")) 5e-09 8e-08 (2 * (1 / 1.4e+10)) ?triggerPeriod (1 / 1.4e+10) ?autoCenter t)" ?name "eye_VT(\"/Vout_2\") 14G")
+ocnxlOutputExpr( "eyeDiagram((v(\"/Vout_p_1\" ?result \"tran\") - v(\"/Vout_n_1\" ?result \"tran\")) 5e-09 2e-08 (2 * (1 / 5.6e+10)) ?triggerPeriod (1 / 5.6e+10) ?autoCenter t)" ?name "eye_VT(\"/Vout_1\") 56G" ?evalType 'point)
+ocnxlOutputExpr( "eyeDiagram((v(\"/Vout_p_2\" ?result \"tran\") - v(\"/Vout_n_2\" ?result \"tran\")) 5e-09 2e-08 (2 * (1 / 5.6e+10)) ?triggerPeriod (1 / 5.6e+10) ?autoCenter t)" ?name "eye_VT(\"/Vout_2\") 56G" ?evalType 'point)
+;ocnxlOutputSignal( "/VACcon_p" ?save t)
+;ocnxlOutputSignal( "/VACcon_n" ?save t)
+;ocnxlOutputSignal( "/Vcon_p" ?save t)
+;ocnxlOutputSignal( "/Vcon_n" ?save t)
+ocnxlOutputExpr( "pv(\"N0\" \"region\" ?result \"dcOpInfo\")" ?name "Stage 1 Region" ?plot t ?evalType 'point)
+ocnxlOutputExpr( "pv(\"N8\" \"region\" ?result \"dcOpInfo\")" ?name "Stage 2 Region" ?plot t ?evalType 'point)
+ocnxlOutputExpr( "((eyeHeightAtXY(eyeDiagram((v(\"/Vout_p_1\" ?result \"tran\") - v(\"/Vout_n_1\" ?result \"tran\")) 5e-09 8e-08 (2 * (1 / 1.4e+10)) ?triggerPeriod (1 / 1.4e+10) ?autoCenter t) (1 / 1.4e+10) 0 ?output \"total\") * 100) / (2 * (VAR(\"V_one\") - VAR(\"V_zero\"))))" ?name "eye_height_XY Vout_1 14G" ?evalType 'point)
+ocnxlOutputExpr( "((eyeWidthAtXY(eyeDiagram((v(\"/Vout_p_1\" ?result \"tran\") - v(\"/Vout_n_1\" ?result \"tran\")) 5e-09 8e-08 (2 * (1 / 1.4e+10)) ?triggerPeriod (1 / 1.4e+10) ?autoCenter t) (1 / 1.4e+10) 0 ?output \"total\") * 100) / VAR(\"bitperiod\"))" ?name "eye_width_XY Vout_1 14G" ?evalType 'point)
+ocnxlOutputExpr( "((eyeHeightAtXY(eyeDiagram((v(\"/Vout_p_2\" ?result \"tran\") - v(\"/Vout_n_2\" ?result \"tran\")) 5e-09 8e-08 (2 * (1 / 1.4e+10)) ?triggerPeriod (1 / 1.4e+10) ?autoCenter t) (1 / 1.4e+10) 0 ?output \"total\") * 100) / (2 * (VAR(\"V_one\") - VAR(\"V_zero\"))))" ?name "eye_height_XY Vout_2 14G" ?evalType 'point)
+ocnxlOutputExpr( "((eyeWidthAtXY(eyeDiagram((v(\"/Vout_p_2\" ?result \"tran\") - v(\"/Vout_n_2\" ?result \"tran\")) 5e-09 8e-08 (2 * (1 / 1.4e+10)) ?triggerPeriod (1 / 1.4e+10) ?autoCenter t) (1 / 1.4e+10) 0 ?output \"total\") * 100) / VAR(\"bitperiod\"))" ?name "eye_width_XY Vout_2 14G" ?evalType 'point)
+ocnxlOutputExpr( "((eyeMeasurement(eyeDiagram((v(\"/Vout_p_1\" ?result \"tran\") - v(\"/Vout_n_1\" ?result \"tran\")) 5e-09 4e-08 (2 * (1 / 2.8e+10)) ?triggerPeriod (1 / 2.8e+10) ?autoCenter t) 5e-09 4e-08 7.142857e-11 0.0 nil t 40.0 0.0 t 60.0 50.0 t 40.0 50.0 t 60.0 100.0 100.0 \"height\") * 100) / (2 * (VAR(\"V_one\") - VAR(\"V_zero\"))))" ?name "eye_height Vout_1 28G" ?evalType 'point)
+ocnxlOutputExpr( "((eyeMeasurement(eyeDiagram((v(\"/Vout_p_1\" ?result \"tran\") - v(\"/Vout_n_1\" ?result \"tran\")) 5e-09 4e-08 (2 * (1 / 2.8e+10)) ?triggerPeriod (1 / 2.8e+10) ?autoCenter t) 5e-09 4e-08 7.142857e-11 0.0 nil t 40.0 0.0 t 60.0 50.0 t 40.0 50.0 t 60.0 100.0 100.0 \"maxHeight\") * 100) / (2 * (VAR(\"V_one\") - VAR(\"V_zero\"))))" ?name "eye_maxHeight Vout_1 28G" ?evalType 'point)
+ocnxlOutputExpr( "((eyeHeightAtXY(eyeDiagram((v(\"/Vout_p_1\" ?result \"tran\") - v(\"/Vout_n_1\" ?result \"tran\")) 5e-09 4e-08 (2 * (1 / 2.8e+10)) ?triggerPeriod (1 / 2.8e+10) ?autoCenter t) (1 / 2.8e+10) 0 ?output \"total\") * 100) / (2 * (VAR(\"V_one\") - VAR(\"V_zero\"))))" ?name "eye_height_XY Vout_1 28G" ?evalType 'point)
+ocnxlOutputExpr( "((eyeMeasurement(eyeDiagram((v(\"/Vout_p_1\" ?result \"tran\") - v(\"/Vout_n_1\" ?result \"tran\")) 5e-09 4e-08 (2 * (1 / 2.8e+10)) ?triggerPeriod (1 / 2.8e+10) ?autoCenter t) 5e-09 4e-08 7.142857e-11 0.0 nil t 40.0 0.0 t 60.0 50.0 t 40.0 50.0 t 60.0 100.0 100.0 \"width\") * 100) / VAR(\"bitperiod\"))" ?name "eye_width Vout_1 28G" ?evalType 'point)
+ocnxlOutputExpr( "((eyeMeasurement(eyeDiagram((v(\"/Vout_p_1\" ?result \"tran\") - v(\"/Vout_n_1\" ?result \"tran\")) 5e-09 4e-08 (2 * (1 / 2.8e+10)) ?triggerPeriod (1 / 2.8e+10) ?autoCenter t) 5e-09 4e-08 7.142857e-11 0.0 nil t 40.0 0.0 t 60.0 50.0 t 40.0 50.0 t 60.0 100.0 100.0 \"maxWidth\") * 100) / VAR(\"bitperiod\"))" ?name "eye_maxWidth Vout_1 28G" ?evalType 'point)
+ocnxlOutputExpr( "((eyeWidthAtXY(eyeDiagram((v(\"/Vout_p_1\" ?result \"tran\") - v(\"/Vout_n_1\" ?result \"tran\")) 5e-09 4e-08 (2 * (1 / 2.8e+10)) ?triggerPeriod (1 / 2.8e+10) ?autoCenter t) (1 / 2.8e+10) 0 ?output \"total\") * 100) / VAR(\"bitperiod\"))" ?name "eye_width_XY Vout_1 28G" ?evalType 'point)
+ocnxlOutputExpr( "((eyeMeasurement(eyeDiagram((v(\"/Vout_p_2\" ?result \"tran\") - v(\"/Vout_n_2\" ?result \"tran\")) 5e-09 4e-08 (2 * (1 / 2.8e+10)) ?triggerPeriod (1 / 2.8e+10) ?autoCenter t) 5e-09 4e-08 7.142857e-11 0.0 nil t 40.0 0.0 t 60.0 50.0 t 40.0 50.0 t 60.0 100.0 100.0 \"height\") * 100) / (2 * (VAR(\"V_one\") - VAR(\"V_zero\"))))" ?name "eye_height Vout_2 28G" ?evalType 'point)
+ocnxlOutputExpr( "((eyeMeasurement(eyeDiagram((v(\"/Vout_p_2\" ?result \"tran\") - v(\"/Vout_n_2\" ?result \"tran\")) 5e-09 4e-08 (2 * (1 / 2.8e+10)) ?triggerPeriod (1 / 2.8e+10) ?autoCenter t) 5e-09 4e-08 7.142857e-11 0.0 nil t 40.0 0.0 t 60.0 50.0 t 40.0 50.0 t 60.0 100.0 100.0 \"maxHeight\") * 100) / (2 * (VAR(\"V_one\") - VAR(\"V_zero\"))))" ?name "eye_maxHeight Vout_2 28G" ?evalType 'point)
+ocnxlOutputExpr( "((eyeHeightAtXY(eyeDiagram((v(\"/Vout_p_2\" ?result \"tran\") - v(\"/Vout_n_2\" ?result \"tran\")) 5e-09 4e-08 (2 * (1 / 2.8e+10)) ?triggerPeriod (1 / 2.8e+10) ?autoCenter t) (1 / 2.8e+10) 0 ?output \"total\") * 100) / (2 * (VAR(\"V_one\") - VAR(\"V_zero\"))))" ?name "eye_height_XY Vout_2 28G" ?evalType 'point)
+ocnxlOutputExpr( "((eyeMeasurement(eyeDiagram((v(\"/Vout_p_2\" ?result \"tran\") - v(\"/Vout_n_2\" ?result \"tran\")) 5e-09 4e-08 (2 * (1 / 2.8e+10)) ?triggerPeriod (1 / 2.8e+10) ?autoCenter t) 5e-09 4e-08 7.142857e-11 0.0 nil t 40.0 0.0 t 60.0 50.0 t 40.0 50.0 t 60.0 100.0 100.0 \"width\") * 100) / VAR(\"bitperiod\"))" ?name "eye_width Vout_2 28G" ?evalType 'point)
+ocnxlOutputExpr( "((eyeMeasurement(eyeDiagram((v(\"/Vout_p_2\" ?result \"tran\") - v(\"/Vout_n_2\" ?result \"tran\")) 5e-09 4e-08 (2 * (1 / 2.8e+10)) ?triggerPeriod (1 / 2.8e+10) ?autoCenter t) 5e-09 4e-08 7.142857e-11 0.0 nil t 40.0 0.0 t 60.0 50.0 t 40.0 50.0 t 60.0 100.0 100.0 \"maxWidth\") * 100) / VAR(\"bitperiod\"))" ?name "eye_maxWidth Vout_2 28G" ?evalType 'point)
+ocnxlOutputExpr( "((eyeWidthAtXY(eyeDiagram((v(\"/Vout_p_2\" ?result \"tran\") - v(\"/Vout_n_2\" ?result \"tran\")) 5e-09 4e-08 (2 * (1 / 2.8e+10)) ?triggerPeriod (1 / 2.8e+10) ?autoCenter t) (1 / 2.8e+10) 0 ?output \"total\") * 100) / VAR(\"bitperiod\"))" ?name "eye_width_XY Vout_2 28G" ?evalType 'point)
+ocnxlOutputExpr( "((eyeMeasurement(eyeDiagram((v(\"/Vout_p_1\" ?result \"tran\") - v(\"/Vout_n_1\" ?result \"tran\")) 5e-09 1.6e-07 (2 * (1 / 7e+09)) ?triggerPeriod (1 / 7e+09) ?autoCenter t) 5e-09 1.6e-07 2.857143e-10 0.0 nil t 40.0 0.0 t 60.0 50.0 t 40.0 50.0 t 60.0 100.0 100.0 \"height\") * 100) / (2 * (VAR(\"V_one\") - VAR(\"V_zero\"))))" ?name "eye_height Vout_1 7G" ?evalType 'point)
+ocnxlOutputExpr( "((eyeMeasurement(eyeDiagram((v(\"/Vout_p_1\" ?result \"tran\") - v(\"/Vout_n_1\" ?result \"tran\")) 5e-09 1.6e-07 (2 * (1 / 7e+09)) ?triggerPeriod (1 / 7e+09) ?autoCenter t) 5e-09 1.6e-07 2.857143e-10 0.0 nil t 40.0 0.0 t 60.0 50.0 t 40.0 50.0 t 60.0 100.0 100.0 \"maxHeight\") * 100) / (2 * (VAR(\"V_one\") - VAR(\"V_zero\"))))" ?name "eye_maxHeight Vout_1 7G" ?evalType 'point)
+ocnxlOutputExpr( "((eyeHeightAtXY(eyeDiagram((v(\"/Vout_p_1\" ?result \"tran\") - v(\"/Vout_n_1\" ?result \"tran\")) 5e-09 1.6e-07 (2 * (1 / 7e+09)) ?triggerPeriod (1 / 7e+09) ?autoCenter t) (1 / 7e+09) 0 ?output \"total\") * 100) / (2 * (VAR(\"V_one\") - VAR(\"V_zero\"))))" ?name "eye_height_XY Vout_1 7G" ?evalType 'point)
+ocnxlOutputExpr( "((eyeMeasurement(eyeDiagram((v(\"/Vout_p_1\" ?result \"tran\") - v(\"/Vout_n_1\" ?result \"tran\")) 5e-09 1.6e-07 (2 * (1 / 7e+09)) ?triggerPeriod (1 / 7e+09) ?autoCenter t) 5e-09 1.6e-07 2.857143e-10 0.0 nil t 40.0 0.0 t 60.0 50.0 t 40.0 50.0 t 60.0 100.0 100.0 \"width\") * 100) / VAR(\"bitperiod\"))" ?name "eye_width Vout_1 7G" ?evalType 'point)
+ocnxlOutputExpr( "((eyeMeasurement(eyeDiagram((v(\"/Vout_p_1\" ?result \"tran\") - v(\"/Vout_n_1\" ?result \"tran\")) 5e-09 1.6e-07 (2 * (1 / 7e+09)) ?triggerPeriod (1 / 7e+09) ?autoCenter t) 5e-09 1.6e-07 2.857143e-10 0.0 nil t 40.0 0.0 t 60.0 50.0 t 40.0 50.0 t 60.0 100.0 100.0 \"maxWidth\") * 100) / VAR(\"bitperiod\"))" ?name "eye_maxWidth Vout_1 7G" ?evalType 'point)
+ocnxlOutputExpr( "((eyeWidthAtXY(eyeDiagram((v(\"/Vout_p_1\" ?result \"tran\") - v(\"/Vout_n_1\" ?result \"tran\")) 5e-09 1.6e-07 (2 * (1 / 7e+09)) ?triggerPeriod (1 / 7e+09) ?autoCenter t) (1 / 7e+09) 0 ?output \"total\") * 100) / VAR(\"bitperiod\"))" ?name "eye_width_XY Vout_1 7G" ?evalType 'point)
+ocnxlOutputExpr( "((eyeMeasurement(eyeDiagram((v(\"/Vout_p_2\" ?result \"tran\") - v(\"/Vout_n_2\" ?result \"tran\")) 5e-09 1.6e-07 (2 * (1 / 7e+09)) ?triggerPeriod (1 / 7e+09) ?autoCenter t) 5e-09 1.6e-07 2.857143e-10 0.0 nil t 40.0 0.0 t 60.0 50.0 t 40.0 50.0 t 60.0 100.0 100.0 \"height\") * 100) / (2 * (VAR(\"V_one\") - VAR(\"V_zero\"))))" ?name "eye_height Vout_2 7G" ?evalType 'point)
+ocnxlOutputExpr( "((eyeMeasurement(eyeDiagram((v(\"/Vout_p_2\" ?result \"tran\") - v(\"/Vout_n_2\" ?result \"tran\")) 5e-09 1.6e-07 (2 * (1 / 7e+09)) ?triggerPeriod (1 / 7e+09) ?autoCenter t) 5e-09 1.6e-07 2.857143e-10 0.0 nil t 40.0 0.0 t 60.0 50.0 t 40.0 50.0 t 60.0 100.0 100.0 \"maxHeight\") * 100) / (2 * (VAR(\"V_one\") - VAR(\"V_zero\"))))" ?name "eye_maxHeight Vout_2 7G" ?evalType 'point)
+ocnxlOutputExpr( "((eyeHeightAtXY(eyeDiagram((v(\"/Vout_p_2\" ?result \"tran\") - v(\"/Vout_n_2\" ?result \"tran\")) 5e-09 1.6e-07 (2 * (1 / 7e+09)) ?triggerPeriod (1 / 7e+09) ?autoCenter t) (1 / 7e+09) 0 ?output \"total\") * 100) / (2 * (VAR(\"V_one\") - VAR(\"V_zero\"))))" ?name "eye_height_XY Vout_2 7G" ?evalType 'point)
+ocnxlOutputExpr( "((eyeMeasurement(eyeDiagram((v(\"/Vout_p_2\" ?result \"tran\") - v(\"/Vout_n_2\" ?result \"tran\")) 5e-09 1.6e-07 (2 * (1 / 7e+09)) ?triggerPeriod (1 / 7e+09) ?autoCenter t) 5e-09 1.6e-07 2.857143e-10 0.0 nil t 40.0 0.0 t 60.0 50.0 t 40.0 50.0 t 60.0 100.0 100.0 \"width\") * 100) / VAR(\"bitperiod\"))" ?name "eye_width Vout_2 7G" ?evalType 'point)
+ocnxlOutputExpr( "((eyeMeasurement(eyeDiagram((v(\"/Vout_p_2\" ?result \"tran\") - v(\"/Vout_n_2\" ?result \"tran\")) 5e-09 1.6e-07 (2 * (1 / 7e+09)) ?triggerPeriod (1 / 7e+09) ?autoCenter t) 5e-09 1.6e-07 2.857143e-10 0.0 nil t 40.0 0.0 t 60.0 50.0 t 40.0 50.0 t 60.0 100.0 100.0 \"maxWidth\") * 100) / VAR(\"bitperiod\"))" ?name "eye_maxWidth Vout_2 7G" ?evalType 'point)
+ocnxlOutputExpr( "((eyeWidthAtXY(eyeDiagram((v(\"/Vout_p_2\" ?result \"tran\") - v(\"/Vout_n_2\" ?result \"tran\")) 5e-09 1.6e-07 (2 * (1 / 7e+09)) ?triggerPeriod (1 / 7e+09) ?autoCenter t) (1 / 7e+09) 0 ?output \"total\") * 100) / VAR(\"bitperiod\"))" ?name "eye_width_XY Vout_2 7G" ?evalType 'point)
+
+ocnxlOutputExpr( "eyeDiagram((v(\"/Vout_p_1\" ?result \"tran\") - v(\"/Vout_n_1\" ?result \"tran\")) 5e-09 4e-08 (2 * (1 / 2.8e+10)) ?triggerPeriod (1 / 2.8e+10) ?autoCenter t)" ?name "eye_VT(\"/Vout_1\") 28G" ?evalType 'point)
+ocnxlOutputExpr( "eyeDiagram((v(\"/Vout_p_2\" ?result \"tran\") - v(\"/Vout_n_2\" ?result \"tran\")) 5e-09 4e-08 (2 * (1 / 2.8e+10)) ?triggerPeriod (1 / 2.8e+10) ?autoCenter t)" ?name "eye_VT(\"/Vout_2\") 28G" ?evalType 'point)
+ocnxlOutputExpr( "eyeDiagram((v(\"/Vout_p_1\" ?result \"tran\") - v(\"/Vout_n_1\" ?result \"tran\")) 5e-09 1.6e-07 (2 * (1 / 7e+09)) ?triggerPeriod (1 / 7e+09) ?autoCenter t)" ?name "eye_VT(\"/Vout_1\") 7G" ?evalType 'point)
+ocnxlOutputExpr( "eyeDiagram((v(\"/Vout_p_2\" ?result \"tran\") - v(\"/Vout_n_2\" ?result \"tran\")) 5e-09 1.6e-07 (2 * (1 / 7e+09)) ?triggerPeriod (1 / 7e+09) ?autoCenter t)" ?name "eye_VT(\"/Vout_2\") 7G" ?evalType 'point)
+ocnxlEndTest() ; "ECE740_tb_channel_CTLE_ML_2_1"
+
+;====================== Specs ==================================================
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_width Vout_1 56G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_maxHeight Vout_1 56G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_height Vout_1 56G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_height_XY Vout_1 56G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_maxWidth Vout_1 56G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_width_XY Vout_1 56G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_height Vout_2 56G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_width Vout_2 56G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_maxHeight Vout_2 56G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_height_XY Vout_2 56G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_maxWidth Vout_2 56G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_width_XY Vout_2 56G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "Stage 1 Region" "1" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "Stage 2 Region" "1" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "channel 0.1G attenuation" "-3" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "stage 1 0.1G attenuation" "-3" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "stage 2 0.1G attenuation" "-3" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_height Vout_1 28G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_maxHeight Vout_1 28G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_height_XY Vout_1 28G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_maxWidth Vout_1 28G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_width Vout_1 28G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_width_XY Vout_1 28G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_height Vout_2 28G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_maxHeight Vout_2 28G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_height_XY Vout_2 28G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_width Vout_2 28G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_maxWidth Vout_2 28G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_width_XY Vout_2 28G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_height Vout_1 14G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_maxHeight Vout_1 14G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_height_XY Vout_1 14G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_width Vout_1 14G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_maxWidth Vout_1 14G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_width_XY Vout_1 14G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_maxHeight Vout_2 14G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_height Vout_2 14G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_height_XY Vout_2 14G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_width Vout_2 14G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_maxWidth Vout_2 14G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_width_XY Vout_2 14G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_height_XY Vout_1 7G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_width Vout_1 7G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_width_XY Vout_1 7G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_height Vout_1 7G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_maxHeight Vout_1 7G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_maxWidth Vout_1 7G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_height Vout_2 7G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_maxHeight Vout_2 7G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_height_XY Vout_2 7G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_width Vout_2 7G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_maxWidth Vout_2 7G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "eye_width_XY Vout_2 7G" "0" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "stage 1 3.5G attenuation" "-6.577" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "stage 2 3.5G attenuation" "-6.577" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "stage 1 7G attenuation" "-9.067" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "stage 2 7G attenuation" "-9.067" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "stage 1 14G attenuation" "-13.14" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "stage 2 14G attenuation" "-13.14" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "stage 1 28G attenuation" "-18.86" )
+ocnxlPutGreaterthanSpec( "ECE740_tb_channel_CTLE_ML_2_1" "stage 2 28G attenuation" "-18.86" )
+
+;====================== Sweeps setup ===========================================
+ocnxlLocalParametricSet( "ECE740_tb_channel_CTLE_ML_2_1" '("wireopt"	"bitperiod"	"V_one"	"V_zero"	"Vin_AC"	"Vin_DC"	"L"	"Rsource"	"Rload"	"fW"	"current"	"ind"	"Rd"	"Cs"	"Rs"	))
+
+;====================== Model Group setup ==========================================
+
+;====================== Corners setup ==========================================
+
+;====================== Checks and Asserts setup ============================================
+ocnxlPutChecksAsserts(?netlist nil)
+
+;====================== Job setup ==============================================
+ocnxlJobSetup( '(
+	"autoresume" "0"
+	"blockemail" "1"
+	"communicationtimeout" "180"
+	"configuretimeout" "300"
+	"defaultcpuvalue" "1"
+	"defaultmemoryvalue" "1000"
+	"distributionmethod" "Local"
+	"jobruntype" "LSCS"
+	"estimatecpuvalue" ""
+	"estimatememoryvalue" ""
+	"estimationsimulationmode" "0"
+	"lingertimeout" "300"
+	"maxjobs" "50"
+	"name" "Maestro Default"
+	"preemptivestart" "1"
+	"providecpuandmemorydata" "1"
+	"reconfigureimmediately" "0"
+	"runService" "0"
+	"runpointsvalue" "5"
+	"runtimeout" "-1"
+	"scaleestimatedbycpu" "100"
+	"scaleestimatedbymemory" "100"
+	"showerrorwhenretrying" "1"
+	"showoutputlogerror" "0"
+	"startmaxjobsimmed" "1"
+	"starttimeout" "300"
+	"userquotaspace" "0"
+	"userquotavalue" ""
+	"usesameprocess" "1"
+	"warndisklow" "0"
+	"warnthresholdvalue" "100"
+) )
+
+;====================== Disabled items =========================================
+
+;====================== Run Mode Options ======================================
+
+;====================== Starting Point Info ======================================
+
+;====================== Run command ============================================
+; Found an issue preventing new runs of ocean script & maestro, need to delete or enable overwrite history
+
+ocnxlRun( ?mode 'sweepsAndCorners ?nominalCornerEnabled t ?allCornersEnabled t ?allSweepsEnabled t)
+ocnxlOutputSummary(?exprSummary t ?specSummary t ?detailed t ?wave t)
+ocnxlOpenResults()
+
+ocnxlExportOutputView( "./CSV_results/BO_result_run_2/test.csv" "") ; Path related to the current working directory, not where is script is located.
+
+;====================== End XL Mode command ===================================
+ocnxlEndXLMode("explorer")
+;ocnxlEndXLMode("assembler")
