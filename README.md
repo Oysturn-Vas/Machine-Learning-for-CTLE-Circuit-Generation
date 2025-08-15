@@ -29,7 +29,7 @@ The project uses two main datasets:
 
 ### Data.csv (Version 1)
 
-- **Size**: 9 samples × 22 features
+- **Size**: 1000 samples × 22 features
 - **Features**: Circuit parameters (fW, current, ind, Rd, Cs, Rs, Stage 1 Region)
 - **Targets**: Channel and stage attenuations at different frequencies (0.1G, 3.5G, 7G, 14G, 28G)
 
@@ -162,7 +162,7 @@ The V2 system intelligently categorizes targets based on data quality:
 
 ### Key Insights from Analysis
 
-#### Version 1 (9 samples):
+#### Version 1 (1000 samples):
 
 - **Perfect predictions** achieved due to dataset size limitations
 - **MLP superiority** on extremely small datasets
@@ -270,18 +270,18 @@ After running the notebooks, check the output directories:
 
 The project evolved significantly from V1 to V2, with dramatic improvements in dataset size and model sophistication:
 
-| Aspect                 | Version 1   | Version 2      |
-| ---------------------- | ----------- | -------------- |
-| **Dataset Size**       | 9 samples   | 10,000 samples |
-| **Features**           | 22 features | 39 features    |
-| **Target Variables**   | 10 targets  | 24 targets     |
-| **Best Model**         | MLP         | XGBoost Robust |
-| **Best R²**            | **0.997**   | 0.612          |
-| **Optimization Tests** | 20 tests    | 50+ tests      |
+| Aspect                 | Version 1    | Version 2      |
+| ---------------------- | ------------ | -------------- |
+| **Dataset Size**       | 1000 samples | 10,000 samples |
+| **Features**           | 22 features  | 39 features    |
+| **Target Variables**   | 10 targets   | 24 targets     |
+| **Best Model**         | MLP          | XGBoost Robust |
+| **Best R²**            | **0.997**    | 0.612          |
+| **Optimization Tests** | 20 tests     | 50+ tests      |
 
 ### Model Performance Comparison
 
-#### Version 1 Results (Small Dataset - 9 samples)
+#### Version 1 Results (Small Dataset - 1000 samples)
 
 | Model    | Overall R² | RMSE      | MAE       | Performance Notes                   |
 | -------- | ---------- | --------- | --------- | ----------------------------------- |
@@ -302,7 +302,7 @@ The project evolved significantly from V1 to V2, with dramatic improvements in d
 #### Version 1 Characteristics:
 
 - **Extremely high R² scores** (0.987-0.997) due to small dataset size
-- **Potential overfitting** with only 9 training samples
+- **Potential overfitting** with only 1000 training samples
 - **MLP dominance** - Neural networks performed best on limited data
 - **Limited generalization** capability due to dataset constraints
 - **Perfect optimization success** - All 20 inverse optimization tests succeeded
@@ -335,7 +335,7 @@ The project evolved significantly from V1 to V2, with dramatic improvements in d
 
 #### Dataset Size Impact:
 
-1. **V1 (9 samples)**: Achieved unrealistically high performance due to overfitting
+1. **V1 (1000 samples)**: Achieved unrealistically high performance due to overfitting
 2. **V2 (10,000 samples)**: Provides realistic, generalizable performance metrics
 3. **Model Selection**: Neural networks excel on tiny datasets, tree-based models on larger datasets
 
