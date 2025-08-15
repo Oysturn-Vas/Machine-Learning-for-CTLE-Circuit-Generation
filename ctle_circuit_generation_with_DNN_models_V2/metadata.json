@@ -1,0 +1,576 @@
+{
+  "dataset_shape": [
+    10000,
+    39
+  ],
+  "target_categories": {
+    "good_targets": [
+      "stage 1 3.5G attenuation",
+      "stage 2 3.5G attenuation",
+      "stage 1 7G attenuation",
+      "stage 2 7G attenuation",
+      "stage 1 14G attenuation",
+      "stage 2 14G attenuation",
+      "stage 1 28G attenuation",
+      "stage 2 28G attenuation",
+      "eye_maxHeight Vout_1 7G",
+      "eye_maxHeight Vout_2 7G",
+      "eye_maxHeight Vout_1 14G",
+      "eye_maxHeight Vout_2 14G"
+    ],
+    "sparse_targets": [
+      "eye_maxHeight Vout_1 28G",
+      "eye_maxHeight Vout_2 28G",
+      "eye_maxHeight Vout_1 56G",
+      "eye_maxHeight Vout_2 56G"
+    ],
+    "constant_targets": [
+      "eye_maxWidth Vout_1 7G",
+      "eye_maxWidth Vout_2 7G",
+      "eye_maxWidth Vout_1 14G",
+      "eye_maxWidth Vout_2 14G",
+      "eye_maxWidth Vout_1 28G",
+      "eye_maxWidth Vout_2 28G",
+      "eye_maxWidth Vout_1 56G",
+      "eye_maxWidth Vout_2 56G"
+    ],
+    "problematic_targets": []
+  },
+  "model_performance": {
+    "xgboost_robust": {
+      "name": "XGBoost Robust (Chained)",
+      "r2": 0.6123609966335591,
+      "rmse": 0.2299365554490963,
+      "mae": 0.07464637564870456,
+      "individual_r2": [
+        0.9940703184880567,
+        0.9943768487457054,
+        0.9945839355920522,
+        0.9941829878103151,
+        0.9879755775891608,
+        0.9881479617468851,
+        0.9883355530424165,
+        0.9874682851434353,
+        0.9886087572947316,
+        -6.765060877045315e-05,
+        0.9799502023948575,
+        -1.3394505604669149e-05,
+        0.9731102597386996,
+        -1.3612563561693491e-05,
+        0.9275485444179765,
+        -0.001578837444965675,
+        0.892431591787047,
+        -0.00012171663429882962,
+        0.8371937616466703,
+        -0.001440568532106834,
+        0.5301517789080039,
+        -4.2625743583935005e-05,
+        0.6419391719428825,
+        -0.0001332110505849471
+      ],
+      "target_performance": {
+        "stage 1 3.5G attenuation": {
+          "r2": 0.9940703184880567,
+          "mae": 0.05540847169165153,
+          "category": "excellent"
+        },
+        "stage 1 7G attenuation": {
+          "r2": 0.9943768487457054,
+          "mae": 0.054623834841976096,
+          "category": "excellent"
+        },
+        "stage 1 14G attenuation": {
+          "r2": 0.9945839355920522,
+          "mae": 0.051903223794843314,
+          "category": "excellent"
+        },
+        "stage 1 28G attenuation": {
+          "r2": 0.9941829878103151,
+          "mae": 0.05068664298951835,
+          "category": "excellent"
+        },
+        "stage 2 3.5G attenuation": {
+          "r2": 0.9879755775891608,
+          "mae": 0.07873605127740098,
+          "category": "excellent"
+        },
+        "stage 2 7G attenuation": {
+          "r2": 0.9881479617468851,
+          "mae": 0.07679731557517273,
+          "category": "excellent"
+        },
+        "stage 2 14G attenuation": {
+          "r2": 0.9883355530424165,
+          "mae": 0.07265023116264233,
+          "category": "excellent"
+        },
+        "stage 2 28G attenuation": {
+          "r2": 0.9874682851434353,
+          "mae": 0.0680184839456442,
+          "category": "excellent"
+        },
+        "eye_maxHeight Vout_1 7G": {
+          "r2": 0.9886087572947316,
+          "mae": 0.07919058159977276,
+          "category": "excellent"
+        },
+        "eye_maxWidth Vout_1 7G": {
+          "r2": -6.765060877045315e-05,
+          "mae": 7.9624075331228e-07,
+          "category": "negative"
+        },
+        "eye_maxHeight Vout_2 7G": {
+          "r2": 0.9799502023948575,
+          "mae": 0.07561703479463014,
+          "category": "excellent"
+        },
+        "eye_maxWidth Vout_2 7G": {
+          "r2": -1.3394505604669149e-05,
+          "mae": 8.048761729229761e-07,
+          "category": "negative"
+        },
+        "eye_maxHeight Vout_1 14G": {
+          "r2": 0.9731102597386996,
+          "mae": 0.11095117499882202,
+          "category": "excellent"
+        },
+        "eye_maxWidth Vout_1 14G": {
+          "r2": -1.3612563561693491e-05,
+          "mae": 7.906142227252706e-07,
+          "category": "negative"
+        },
+        "eye_maxHeight Vout_2 14G": {
+          "r2": 0.9275485444179765,
+          "mae": 0.13561629197143266,
+          "category": "excellent"
+        },
+        "eye_maxWidth Vout_2 14G": {
+          "r2": -0.001578837444965675,
+          "mae": 7.974829199119788e-07,
+          "category": "negative"
+        },
+        "eye_maxHeight Vout_1 28G": {
+          "r2": 0.892431591787047,
+          "mae": 0.17539569094030244,
+          "category": "good"
+        },
+        "eye_maxWidth Vout_1 28G": {
+          "r2": -0.00012171663429882962,
+          "mae": 8.040182942772002e-07,
+          "category": "negative"
+        },
+        "eye_maxHeight Vout_2 28G": {
+          "r2": 0.8371937616466703,
+          "mae": 0.19366195156936714,
+          "category": "good"
+        },
+        "eye_maxWidth Vout_2 28G": {
+          "r2": -0.001440568532106834,
+          "mae": 8.01946595865984e-07,
+          "category": "negative"
+        },
+        "eye_maxHeight Vout_1 56G": {
+          "r2": 0.5301517789080039,
+          "mae": 0.29015980716571166,
+          "category": "fair"
+        },
+        "eye_maxWidth Vout_1 56G": {
+          "r2": -4.2625743583935005e-05,
+          "mae": 8.114231752707786e-07,
+          "category": "negative"
+        },
+        "eye_maxHeight Vout_2 56G": {
+          "r2": 0.6419391719428825,
+          "mae": 0.22208983981881442,
+          "category": "fair"
+        },
+        "eye_maxWidth Vout_2 56G": {
+          "r2": -0.0001332110505849471,
+          "mae": 7.80829072489933e-07,
+          "category": "negative"
+        }
+      },
+      "negative_r2_count": 8,
+      "good_r2_count": 2,
+      "excellent_r2_count": 12,
+      "training_time": 4.538510084152222,
+      "type_performance": {
+        "challenging": 0.6123609966335591
+      }
+    },
+    "lightgbm_robust": {
+      "name": "LightGBM Robust (Chained)",
+      "r2": 0.6110237798734812,
+      "rmse": 0.23284237651930104,
+      "mae": 0.07856874150918948,
+      "individual_r2": [
+        0.9920542969170915,
+        0.9928271872655297,
+        0.9931093720462024,
+        0.9926829318634396,
+        0.9847632088219119,
+        0.9849277200392612,
+        0.9858842652453381,
+        0.984682734180048,
+        0.9888170830777565,
+        -6.765061469748979e-05,
+        0.9776196979548667,
+        -1.339450549764365e-05,
+        0.9684462140500785,
+        -1.3612563553477841e-05,
+        0.9231842788647082,
+        -0.0015788374423737483,
+        0.8849884138794037,
+        -0.00012171663438365066,
+        0.8349000924171059,
+        -0.0014405685320777462,
+        0.5386786509185524,
+        -4.262575107638611e-05,
+        0.6404161865163939,
+        -0.0001332110504790318
+      ],
+      "target_performance": {
+        "stage 1 3.5G attenuation": {
+          "r2": 0.9920542969170915,
+          "mae": 0.06496484832490527,
+          "category": "excellent"
+        },
+        "stage 1 7G attenuation": {
+          "r2": 0.9928271872655297,
+          "mae": 0.061973733851759555,
+          "category": "excellent"
+        },
+        "stage 1 14G attenuation": {
+          "r2": 0.9931093720462024,
+          "mae": 0.05766952234683606,
+          "category": "excellent"
+        },
+        "stage 1 28G attenuation": {
+          "r2": 0.9926829318634396,
+          "mae": 0.05505944516112209,
+          "category": "excellent"
+        },
+        "stage 2 3.5G attenuation": {
+          "r2": 0.9847632088219119,
+          "mae": 0.08802751695171218,
+          "category": "excellent"
+        },
+        "stage 2 7G attenuation": {
+          "r2": 0.9849277200392612,
+          "mae": 0.08717932412062067,
+          "category": "excellent"
+        },
+        "stage 2 14G attenuation": {
+          "r2": 0.9858842652453381,
+          "mae": 0.078992671635136,
+          "category": "excellent"
+        },
+        "stage 2 28G attenuation": {
+          "r2": 0.984682734180048,
+          "mae": 0.07268837130696333,
+          "category": "excellent"
+        },
+        "eye_maxHeight Vout_1 7G": {
+          "r2": 0.9888170830777565,
+          "mae": 0.07907180937635194,
+          "category": "excellent"
+        },
+        "eye_maxWidth Vout_1 7G": {
+          "r2": -6.765061469748979e-05,
+          "mae": 7.962407533096348e-07,
+          "category": "negative"
+        },
+        "eye_maxHeight Vout_2 7G": {
+          "r2": 0.9776196979548667,
+          "mae": 0.08381627721416911,
+          "category": "excellent"
+        },
+        "eye_maxWidth Vout_2 7G": {
+          "r2": -1.339450549764365e-05,
+          "mae": 8.048761729229463e-07,
+          "category": "negative"
+        },
+        "eye_maxHeight Vout_1 14G": {
+          "r2": 0.9684462140500785,
+          "mae": 0.12415293091028429,
+          "category": "excellent"
+        },
+        "eye_maxWidth Vout_1 14G": {
+          "r2": -1.3612563553477841e-05,
+          "mae": 7.906142227252642e-07,
+          "category": "negative"
+        },
+        "eye_maxHeight Vout_2 14G": {
+          "r2": 0.9231842788647082,
+          "mae": 0.14530731056388474,
+          "category": "excellent"
+        },
+        "eye_maxWidth Vout_2 14G": {
+          "r2": -0.0015788374423737483,
+          "mae": 7.974829199107906e-07,
+          "category": "negative"
+        },
+        "eye_maxHeight Vout_1 28G": {
+          "r2": 0.8849884138794037,
+          "mae": 0.1860063793371611,
+          "category": "good"
+        },
+        "eye_maxWidth Vout_1 28G": {
+          "r2": -0.00012171663438365066,
+          "mae": 8.040182942772285e-07,
+          "category": "negative"
+        },
+        "eye_maxHeight Vout_2 28G": {
+          "r2": 0.8349000924171059,
+          "mae": 0.1999389908011476,
+          "category": "good"
+        },
+        "eye_maxWidth Vout_2 28G": {
+          "r2": -0.0014405685320777462,
+          "mae": 8.019465958659648e-07,
+          "category": "negative"
+        },
+        "eye_maxHeight Vout_1 56G": {
+          "r2": 0.5386786509185524,
+          "mae": 0.2778341257937005,
+          "category": "fair"
+        },
+        "eye_maxWidth Vout_1 56G": {
+          "r2": -4.262575107638611e-05,
+          "mae": 8.114231752739e-07,
+          "category": "negative"
+        },
+        "eye_maxHeight Vout_2 56G": {
+          "r2": 0.6404161865163939,
+          "mae": 0.22296015109358633,
+          "category": "fair"
+        },
+        "eye_maxWidth Vout_2 56G": {
+          "r2": -0.0001332110504790318,
+          "mae": 7.808290724899599e-07,
+          "category": "negative"
+        }
+      },
+      "negative_r2_count": 8,
+      "good_r2_count": 2,
+      "excellent_r2_count": 12,
+      "training_time": 2.9134199619293213,
+      "type_performance": {
+        "challenging": 0.6110237798734812
+      }
+    },
+    "mlp_robust": {
+      "name": "Neural Network Robust (Chained)",
+      "r2": -212.12915998016123,
+      "rmse": 0.2266573531079853,
+      "mae": 0.0669055954106702,
+      "individual_r2": [
+        0.997410679578804,
+        0.9969651564197491,
+        0.9956529156487747,
+        0.9938344406912148,
+        0.9950254205020669,
+        0.9940953092159119,
+        0.992025502275011,
+        0.9890946585795858,
+        0.9856878175278856,
+        -0.030295243861526266,
+        0.9867072905867659,
+        -245.18977016975526,
+        0.9605892369958218,
+        -4831.954540847676,
+        0.9277754033544788,
+        -0.05300158491331475,
+        0.8784427813336927,
+        -0.003445889901421806,
+        0.8241516886314463,
+        -15.531867221008152,
+        0.5120369879261382,
+        -2.3044162617868906,
+        0.7071375351161221,
+        -10.769135129349138
+      ],
+      "target_performance": {
+        "stage 1 3.5G attenuation": {
+          "r2": 0.997410679578804,
+          "mae": 0.03513171257606616,
+          "category": "excellent"
+        },
+        "stage 1 7G attenuation": {
+          "r2": 0.9969651564197491,
+          "mae": 0.03818682381647776,
+          "category": "excellent"
+        },
+        "stage 1 14G attenuation": {
+          "r2": 0.9956529156487747,
+          "mae": 0.04168204400836826,
+          "category": "excellent"
+        },
+        "stage 1 28G attenuation": {
+          "r2": 0.9938344406912148,
+          "mae": 0.04355179222039623,
+          "category": "excellent"
+        },
+        "stage 2 3.5G attenuation": {
+          "r2": 0.9950254205020669,
+          "mae": 0.046578331971815656,
+          "category": "excellent"
+        },
+        "stage 2 7G attenuation": {
+          "r2": 0.9940953092159119,
+          "mae": 0.05025949506544631,
+          "category": "excellent"
+        },
+        "stage 2 14G attenuation": {
+          "r2": 0.992025502275011,
+          "mae": 0.05459940704884786,
+          "category": "excellent"
+        },
+        "stage 2 28G attenuation": {
+          "r2": 0.9890946585795858,
+          "mae": 0.055904731176930074,
+          "category": "excellent"
+        },
+        "eye_maxHeight Vout_1 7G": {
+          "r2": 0.9856878175278856,
+          "mae": 0.07500494057233512,
+          "category": "excellent"
+        },
+        "eye_maxWidth Vout_1 7G": {
+          "r2": -0.030295243861526266,
+          "mae": 8.076899619790968e-07,
+          "category": "negative"
+        },
+        "eye_maxHeight Vout_2 7G": {
+          "r2": 0.9867072905867659,
+          "mae": 0.059409719615279834,
+          "category": "excellent"
+        },
+        "eye_maxWidth Vout_2 7G": {
+          "r2": -245.18977016975526,
+          "mae": 1.5860125948163358e-05,
+          "category": "negative"
+        },
+        "eye_maxHeight Vout_1 14G": {
+          "r2": 0.9605892369958218,
+          "mae": 0.1203579561640316,
+          "category": "excellent"
+        },
+        "eye_maxWidth Vout_1 14G": {
+          "r2": -4831.954540847676,
+          "mae": 6.295239823913078e-05,
+          "category": "negative"
+        },
+        "eye_maxHeight Vout_2 14G": {
+          "r2": 0.9277754033544788,
+          "mae": 0.12935578443306492,
+          "category": "excellent"
+        },
+        "eye_maxWidth Vout_2 14G": {
+          "r2": -0.05300158491331475,
+          "mae": 8.141726354487236e-07,
+          "category": "negative"
+        },
+        "eye_maxHeight Vout_1 28G": {
+          "r2": 0.8784427813336927,
+          "mae": 0.17199572759349213,
+          "category": "good"
+        },
+        "eye_maxWidth Vout_1 28G": {
+          "r2": -0.003445889901421806,
+          "mae": 8.053202553260043e-07,
+          "category": "negative"
+        },
+        "eye_maxHeight Vout_2 28G": {
+          "r2": 0.8241516886314463,
+          "mae": 0.1851101100451806,
+          "category": "good"
+        },
+        "eye_maxWidth Vout_2 28G": {
+          "r2": -15.531867221008152,
+          "mae": 3.96193078402226e-06,
+          "category": "negative"
+        },
+        "eye_maxHeight Vout_1 56G": {
+          "r2": 0.5120369879261382,
+          "mae": 0.2941734391144621,
+          "category": "fair"
+        },
+        "eye_maxWidth Vout_1 56G": {
+          "r2": -2.3044162617868906,
+          "mae": 1.6086983788687822e-06,
+          "category": "negative"
+        },
+        "eye_maxHeight Vout_2 56G": {
+          "r2": 0.7071375351161221,
+          "mae": 0.20434275094868584,
+          "category": "good"
+        },
+        "eye_maxWidth Vout_2 56G": {
+          "r2": -10.769135129349138,
+          "mae": 2.713149001515787e-06,
+          "category": "negative"
+        }
+      },
+      "negative_r2_count": 8,
+      "good_r2_count": 3,
+      "excellent_r2_count": 12,
+      "training_time": 104.5175187587738,
+      "type_performance": {
+        "challenging": -212.12915998016123
+      }
+    }
+  },
+  "model_scores": {
+    "xgboost_robust": 0.47827773198675705,
+    "lightgbm_robust": 0.4777428452827258,
+    "mlp_robust": -84.60999732539783
+  },
+  "best_model_name": "xgboost_robust",
+  "feature_names": [
+    "fW",
+    "current",
+    "ind",
+    "Rd",
+    "Cs",
+    "Rs",
+    "channel 0.1G attenuation",
+    "channel 3.5G attenuation",
+    "channel 7G attenuation",
+    "channel 14G attenuation",
+    "channel 28G attenuation",
+    "Stage 1 Region",
+    "stage 1 0.1G attenuation",
+    "stage 2 0.1G attenuation",
+    "Hard Constraint of neg2 on 0.1G Status"
+  ],
+  "target_names": [
+    "stage 1 3.5G attenuation",
+    "stage 1 7G attenuation",
+    "stage 1 14G attenuation",
+    "stage 1 28G attenuation",
+    "stage 2 3.5G attenuation",
+    "stage 2 7G attenuation",
+    "stage 2 14G attenuation",
+    "stage 2 28G attenuation",
+    "eye_maxHeight Vout_1 7G",
+    "eye_maxWidth Vout_1 7G",
+    "eye_maxHeight Vout_2 7G",
+    "eye_maxWidth Vout_2 7G",
+    "eye_maxHeight Vout_1 14G",
+    "eye_maxWidth Vout_1 14G",
+    "eye_maxHeight Vout_2 14G",
+    "eye_maxWidth Vout_2 14G",
+    "eye_maxHeight Vout_1 28G",
+    "eye_maxWidth Vout_1 28G",
+    "eye_maxHeight Vout_2 28G",
+    "eye_maxWidth Vout_2 28G",
+    "eye_maxHeight Vout_1 56G",
+    "eye_maxWidth Vout_1 56G",
+    "eye_maxHeight Vout_2 56G",
+    "eye_maxWidth Vout_2 56G"
+  ],
+  "total_targets_used": 24,
+  "timestamp": "2025-08-14T20:05:27.921513",
+  "system_version": "V2_with_advanced_visualizations"
+}
